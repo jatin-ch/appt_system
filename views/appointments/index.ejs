@@ -1,0 +1,32 @@
+<html>  
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <h2>Appointments</h2>
+            <div class="row">
+                <% for (var i = 0; i < appointments.length; i++) { %>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                          <div class="card-body text-center">
+                            <p class="card-text">
+                                <a href="/users/<%= appointments[i].user.id %>">
+                                    <%= appointments[i].user.firstname %> <%= appointments[i].user.lastname %>
+                                </a>
+                            </p>
+                            <small>
+                                <a href="/events/<%= appointments[i].event.id %>">
+                                    <%= appointments[i].event.title %>
+                                </a> -
+                                <%= moment(appointments[i].apptAt).format('Do MMMM YYYY, hh:mm a') %>
+                            </small>
+                            <p>Status: <b><%= appointments[i].status %></b></p>
+                          </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </body>
+</html>

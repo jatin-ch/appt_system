@@ -1,0 +1,18 @@
+{
+  "name": "calendar_appointment_system",
+  "version": "1.0.0",
+  "description": "calendar appointment system where users can see free slot and they can book for whatever time period which is existing",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jatin Choudhary",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "moment": "^2.27.0",
+    "mongoose": "^5.9.19"
+  }
+}

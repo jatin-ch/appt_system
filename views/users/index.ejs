@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <h2>Users</h2>
+                    <div class="row">
+                        <% for (var i = 0; i < users.length; i++) { %>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                  <div class="card-body text-center">
+                                    <p class="card-text">
+                                        <a href="/users/<%= users[i].id %>">
+                                            <%= users[i].firstname %> <%= users[i].lastname %>
+                                        </a> <br />
+                                        <small>Phone No. <%= users[i].phoneNo %></small>
+                                    </p>
+                                    
+                                    <p>
+                                        Stats: <b><%= users[i].appointments.length %></b> 
+                                        <small>Appt(s) booked</small>
+                                    </p>
+                                  </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+        
+                <div class="col-md-3" style="border: 1px solid silver;">
+                    <h1>New User</h1>
+                    <form method="POST" action="/users">
+                        <label for="title">Firstname</label>
+                        <input class="form-control" type="text" name="firstname" id="firstname" placeholder="Abc" required /> <br />
+        
+                        <label for="title">Lastname</label>
+                        <input class="form-control" type="text" name="lastname" id="lastname" placeholder="Xyz" required /> <br />
+        
+                        <label for="title">Phone No.</label>
+                        <input class="form-control" type="text" name="phone" id="phone" placeholder="+91" required /> <br />
+        
+                        <input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+<html>  
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">    
+    </head>
+    <body>
+        <div class="container">
+            <h2>Events</h2>
+            <div class="row">
+                <% for (var i = 0; i < events.length; i++) { %>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                          <div class="card-body text-center">
+                            <p class="card-text">
+                                <a href="/events/<%= events[i].id %>">
+                                    <%= events[i].title %>
+                                </a> <br />
+                                <small><%= moment(events[i].begin).format('ddd, Do MMMM YYYY') %></small>
+                            </p>
+                            
+                            <p>
+                                Stats: <b><%= events[i].appointments.length %></b> 
+                                <small><a href="/appointments/<%= events[i].id %>">Appt(s)</a> booked</small>
+                            </p>
+                          </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </body>
+</html>

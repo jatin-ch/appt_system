@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+    </head>
+    <body>
+        <div class="col-md-6 offset-md-3" style="border: 1px solid silver;">
+            <h1>New Event</h1>
+            <form method="POST" action="/events">
+                <label for="title">Title</label>
+                <input class="form-control" type="text" name="title" id="title" placeholder="Event Name" required /> <br />
+
+                <label for="datetimepicker_from">From</label>
+                <input class="form-control" type="text" name="from" id="datetimepicker_from" placeholder="Start Hours" required /> <br />
+
+                <label for="datetimepicker_to">To</label>
+                <input class="form-control" type="text" name="to" id="datetimepicker_to" placeholder="End Hours" required /> <br />
+
+                <label for="duration">Duration</label>
+                <input class="form-control" type="number" min="5" max="60" name="duration" id="duration" placeholder="Minutes" required /> <br />
+
+                <input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit" />
+            </form>
+        </div>
+    </body>
+    <script>
+        jQuery('#datetimepicker').datetimepicker({
+            format:'Y-m-d H:i'
+        });
+        jQuery(function() {
+            jQuery('#datetimepicker_from').datetimepicker({
+                format:'Y-m-d H:i',
+                onShow:function( ct ){
+                    this.setOptions({
+                        maxDate:jQuery('#datetimepicker_to').val()?jQuery('#datetimepicker_to').val():false
+                    })
+                }
+            });
+            jQuery('#datetimepicker_to').datetimepicker({
+                format:'Y-m-d H:i',
+                onShow:function( ct ){
+                    this.setOptions({
+                        minDate:jQuery('#datetimepicker_from').val()?jQuery('#datetimepicker_from').val():false
+                    })
+                }
+            });
+        })
+    </script>
+</html>

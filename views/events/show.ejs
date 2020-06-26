@@ -1,0 +1,116 @@
+<html>  
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <style>
+            .chip {
+                display: inline-block;
+                padding: 0 25px;
+                height: 50px;
+                font-size: 16px;
+                line-height: 50px;
+                margin: 10px;
+                border-radius: 25px;
+                cursor: pointer;
+                color: #007bff;
+                background-color: #f1f1f1;
+            }
+            .radio_item{
+                display: none !important;
+            }
+            .radio_item:checked + label > .chip {
+                background-color: #d9edf7;
+            }
+            #bookAppointment {
+                display: none;
+            }
+            .disabled > .chip {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <form method="POST" action="/appointments">
+                <input type="hidden" name="event" value="<%= event.id %>" />
+                <h1><%= event.title %></h1> <br />
+                <h4 class="text-center">Avaliable slots for <%= moment(event.begin).format('Do MMMM YYYY') %></h4>
+                <% for (var i = 0; i < slots.length; i++) { %>
+                    <% if (bookedSlots.includes(slots[i])) { %>
+                        <label class="disabled"> 
+                            <div class="chip">
+                                <%= moment(slots[i]).format('hh:mm a') %>
+                            </div>
+                        </label>
+                    <% } else { %>
+                        <input type="radio" class="radio_item" value="<%= slots[i] %>" name="slot" id="slot<%= i %>">
+                        <label for="slot<%= i %>"> 
+                            <div class="chip">
+                                <%= moment(slots[i]).format('hh:mm a') %>
+                            </div>
+                        </label>
+                    <% } %>
+                <% } %>
+                <br />
+                
+                <button id="bookAppointment" type="button" class="btn btn-primary btn-lg pull-right" data-toggle="modal" data-target="#myModal">Book Appointment</button>
+            
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><%= event.title %></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Appointment Date & Time: 
+                                <small id="apptDateTime"></small>
+                            </p> <br />
+                            <select class="form-control" type="text" name="user">
+                                <option>Select User</option>
+                                <% for(var i = 0; i < users.length; i++) { %>
+                                    <option value="<%= users[i].id %>">
+                                        <%= users[i].firstname %> <%= users[i].lastname %>
+                                    </option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                        <input class="btn btn-success" type="submit" value="Submit" />
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+
+    <script>
+        $(document).ready(function() {
+            $('.radio_item').on('click', function() {
+                if ($('input[type=radio][name=slot]').is(':checked')) {
+                    $('#bookAppointment').css('display', 'block');
+                }
+            });
+
+            $('#bookAppointment').on('click', function() {
+                var slot = $( "input[type=radio][name=slot]:checked").val();
+                var date =  new Date(slot)
+
+                var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                var hours = date.getHours()
+                var minutes = date.getMinutes()
+                var ampm = hours >= 12 ? 'pm' : 'am';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0'+minutes : minutes;
+                var dateTime =  days[date.getDay()] + ', ' + date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + ', ' + hours + ':' + minutes + ' ' + ampm;
+                $('#apptDateTime').html(dateTime);
+            });
+        });
+    </script>   
+</html>
