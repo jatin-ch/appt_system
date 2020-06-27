@@ -1,8 +1,9 @@
 var express = require('express');
 var app = express();
-
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://host-address/db-name');
+var config = require('./config');
+
+mongoose.connect(config.dbConnectionString());
 
 var eventsController = require('./controllers/events_controller');
 var eventsApiController = require('./controllers/api/events_controller');
