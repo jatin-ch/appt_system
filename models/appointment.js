@@ -5,6 +5,7 @@ var appointmentSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     event: { type: Schema.Types.ObjectId, ref: 'Event' },
     apptAt: Date,
+    timezone: { type: String, default: 'Asia/Kolkata' },
     status: String,
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }

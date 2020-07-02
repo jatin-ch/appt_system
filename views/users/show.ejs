@@ -32,7 +32,7 @@
                                 <a href="/events/<%= appointments[i].event.id %>">
                                     <%= appointments[i].event.title %>
                                 </a> <br />
-                                <small><%= moment(appointments[i].apptAt).format('ddd, Do MMMM YYYY') %></small>
+                                <small><%= moment(appointments[i].apptAt).tz(appointments[i].timezone).format('ddd, Do MMMM YYYY, hh:mm a (z)') %></small>
                             </p>
                             <p>
                                 Status: <b><%= appointments[i].status %></b> 
