@@ -1,5 +1,6 @@
 var Event = require('../models/event');
 var moment = require('moment');
+const mt = require('moment-timezone');
 var bodyParser = require('body-parser');
 var Appointment = require('../models/appointment');
 const User = require('../models/user');
@@ -123,6 +124,12 @@ module.exports = function(app) {
     app.get('/events/:id', function(req, res) {
         Event.findById(req.params.id, function(err, event) {
             if (err) throw err;
+
+            timezones = mt.tz.names()
+            if (!timezones.includes(req.query.tz)) {
+                req.query.tz = 'Asia/Kolkata'
+            }
+
             var slots = [];
             var bookedSlots = [];
             var temp = moment(event.begin).format("YYYY-MM-DDTHH:mm")
@@ -139,7 +146,7 @@ module.exports = function(app) {
             console.log(event.appointments)
             User.find({}, function(err, users) {
                 if (err) throw err;
-                res.render('events/show', { moment: moment, event: event, slots: slots, bookedSlots: bookedSlots, users: users });
+                res.render('events/show', { moment: moment, timezones: timezones, timezone: req.query.tz, event: event, slots: slots, bookedSlots: bookedSlots, users: users });
             });
         }).populate('appointments', 'apptAt');
     })

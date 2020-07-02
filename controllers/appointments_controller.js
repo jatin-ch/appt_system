@@ -44,6 +44,7 @@ module.exports = function(app) {
                         var apptObj = {
                             event: event.id,
                             apptAt: appt_date,
+                            timezone: req.body.timezone,
                             user: req.body.user,
                             status: "New"
                         }

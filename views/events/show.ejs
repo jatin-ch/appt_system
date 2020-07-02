@@ -1,15 +1,16 @@
 <html>  
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
         <style>
             .chip {
                 display: inline-block;
                 padding: 0 25px;
                 height: 50px;
-                font-size: 16px;
+                font-size: 14px;
                 line-height: 50px;
                 margin: 10px;
                 border-radius: 25px;
@@ -30,26 +31,47 @@
                 cursor: not-allowed;
                 opacity: 0.5;
             }
+            #apptDateTime {
+                color: #007bff;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <form method="POST" action="/appointments">
                 <input type="hidden" name="event" value="<%= event.id %>" />
+                <input type="hidden" name="timezone" value="<%= timezone %>" />
                 <h1><%= event.title %></h1> <br />
-                <h4 class="text-center">Avaliable slots for <%= moment(event.begin).format('Do MMMM YYYY') %></h4>
+                <h4 class="text-center">
+                    Avaliable slots in
+                    <select class="selectpicker" data-live-search="true" required>
+                        <% for (var i = 0; i < timezones.length; i++) { %>
+                            <% if (timezones[i] == timezone) { %>
+                                <option value="<%= timezones[i] %>" selected><%= timezones[i] %></option>
+                            <% } else { %>
+                                <option value="<%= timezones[i] %>"><%= timezones[i] %></option>
+                            <% } %>
+                        <% } %>
+                    </select>
+                    <%= moment().tz(timezone).format('z') %>
+                </h4>
+                <p class="text-center">
+                    Form <font color="#a94442"><%= moment(event.begin).tz(timezone).format('Do MMMM YYYY, hh:mm a') %></font>
+                    To <font color="#a94442"><%= moment(event.end).tz(timezone).format('Do MMMM YYYY, hh:mm a') %></font>
+                </p>
+
                 <% for (var i = 0; i < slots.length; i++) { %>
                     <% if (bookedSlots.includes(slots[i])) { %>
                         <label class="disabled"> 
                             <div class="chip">
-                                <%= moment(slots[i]).format('hh:mm a') %>
+                                <%= moment(slots[i]).tz(timezone).format('DD-MM-YYYY, hh:mm a') %>
                             </div>
                         </label>
                     <% } else { %>
                         <input type="radio" class="radio_item" value="<%= slots[i] %>" name="slot" id="slot<%= i %>">
                         <label for="slot<%= i %>"> 
                             <div class="chip">
-                                <%= moment(slots[i]).format('hh:mm a') %>
+                                <%= moment(slots[i]).tz(timezone).format('DD-MM-YYYY, hh:mm a') %>
                             </div>
                         </label>
                     <% } %>
@@ -63,11 +85,10 @@
                     <div class="modal-content">
                         <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title"><%= event.title %></h4>
+                        <h4 class="modal-title">Appointment for <%= event.title %></h4>
                         </div>
                         <div class="modal-body">
-                            <p>Appointment Date & Time: 
-                                <small id="apptDateTime"></small>
+                            <p>Date & Time: <i id="apptDateTime"></i>
                             </p> <br />
                             <select class="form-control" type="text" name="user">
                                 <option>Select User</option>
@@ -89,7 +110,13 @@
     </body>
 
     <script>
+        $('select').selectpicker();
+
         $(document).ready(function() {
+            $('.selectpicker').on('change', function() {
+                window.location = "/events/<%= event.id %>" + "?tz=" + $(this).val()
+            })
+
             $('.radio_item').on('click', function() {
                 if ($('input[type=radio][name=slot]').is(':checked')) {
                     $('#bookAppointment').css('display', 'block');
@@ -97,19 +124,9 @@
             });
 
             $('#bookAppointment').on('click', function() {
-                var slot = $( "input[type=radio][name=slot]:checked").val();
-                var date =  new Date(slot)
-
-                var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                var hours = date.getHours()
-                var minutes = date.getMinutes()
-                var ampm = hours >= 12 ? 'pm' : 'am';
-                hours = hours % 12;
-                hours = hours ? hours : 12; // the hour '0' should be '12'
-                minutes = minutes < 10 ? '0'+minutes : minutes;
-                var dateTime =  days[date.getDay()] + ', ' + date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + ', ' + hours + ':' + minutes + ' ' + ampm;
-                $('#apptDateTime').html(dateTime);
+                var labelId = $( "input[type=radio][name=slot]:checked").attr("id");
+                var Apptdt = $("label[for='"+labelId+"']").text() + "(<%= moment().tz(timezone).format('z')%>)"
+                $('#apptDateTime').html(Apptdt);
             });
         });
     </script>   

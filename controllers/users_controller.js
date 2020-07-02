@@ -13,7 +13,7 @@ module.exports = function(app) {
             if (err) throw err;
 
             if (user) {
-                Appointment.find({ _id: { $in: user.appointments } }, { apptAt: 1, status: 1 }, function(err, appointments) {
+                Appointment.find({ _id: { $in: user.appointments } }, { apptAt: 1, timezone: 1, status: 1 }, function(err, appointments) {
                     if (err) throw err;
                     res.render('users/show', { user: user, appointments: appointments, moment: moment });
                 }).populate('event', 'title');
